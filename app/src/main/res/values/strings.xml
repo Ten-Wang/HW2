@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">HW2</string>
+    <!--    Network-->
+    <string name="https_api_url_prefix">https://code-test.migoinc-dev.com</string>
+    <string name="wifi_api_url_prefix">http://192.168.2.2</string>
+    <string name="buy">Buy</string>
+    <string name="transport_wifi">TRANSPORT_WIFI</string>
+    <string name="network_capabilities">NetworkCapabilities:</string>
+    <string name="transport_cellular">TRANSPORT_CELLULAR</string>
+    <string name="tv_active_text">%S activate at %sCurrentTime,\nwill expire at %s</string>
+    <string name="fail_message">Fail message:%s</string>
+    <string name="response_display">status:%s message:%s</string>
+
+</resources>
