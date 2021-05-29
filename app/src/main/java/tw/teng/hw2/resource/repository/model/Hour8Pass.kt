@@ -9,9 +9,4 @@ class Hour8Pass : HourPass() {
         duration = TimeUnit.HOURS.toMillis(8)
         rp = 1000
     }
-
-    @Override
-    override fun onClick() {
-        super.onClick()
-    }
 }

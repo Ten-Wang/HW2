@@ -9,9 +9,4 @@ open class DayPass : HourPass() {
         duration = TimeUnit.HOURS.toMillis(24)
         rp = 2000
     }
-
-    @Override
-    override fun onClick() {
-        super.onClick()
-    }
 }

@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import tw.teng.hw2.R
-import tw.teng.hw2.resource.repository.model.TitleItem
 import tw.teng.hw2.resource.repository.model.HourPass
 import tw.teng.hw2.resource.repository.model.ListItem
+import tw.teng.hw2.resource.repository.model.TitleItem
 import java.text.DecimalFormat
 
 class RecyclerViewAdapter internal constructor(
@@ -68,6 +68,11 @@ class RecyclerViewAdapter internal constructor(
         return itemList.size
     }
 
+    fun setItems(listItems: MutableList<ListItem>) {
+        itemList = listItems
+        notifyDataSetChanged()
+    }
+
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     open inner class PassViewHolder(itemView: View) : ViewHolder(itemView) {
@@ -95,7 +100,6 @@ class RecyclerViewAdapter internal constructor(
         fun bindData(list: List<ListItem>, position: Int) {
             val item = list[position]
             tvTitle.text = (item as TitleItem).title
-
         }
     }
 

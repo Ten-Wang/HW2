@@ -9,9 +9,4 @@ class Day7Pass : DayPass() {
         duration = TimeUnit.DAYS.toMillis(7)
         rp = 10000
     }
-
-    @Override
-    override fun onClick() {
-        super.onClick()
-    }
 }

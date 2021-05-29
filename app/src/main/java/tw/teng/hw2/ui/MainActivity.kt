@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import tw.teng.hw2.R
@@ -31,15 +32,31 @@ class MainActivity : AppCompatActivity() {
         HourPass(),
         Hour8Pass()
     )
+    private lateinit var viewModel: MainViewModel
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.listLiveData.observe(this, {
+            (binding.recyclerView.adapter as RecyclerViewAdapter).setItems(it)
+        })
+        viewModel.toastLiveData.observe(this, {
+            showToast(it)
+        })
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         val recyclerView = binding.recyclerView
-        recyclerView.addItemDecoration(DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL))
-        val adapter = RecyclerViewAdapter(arrayList,
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                applicationContext,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        val adapter = RecyclerViewAdapter(
+            arrayListOf(),
             object : RecyclerViewAdapter.ListItemAdapterListener {
                 override fun onItemClick(position: Int) {
                     val strName = (arrayList[position] as HourPass).name
@@ -51,8 +68,9 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.tv_active_text, strName, strCurrentTime, strExpiredTime)
                 }
             })
-        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.adapter = adapter
+
+        viewModel.setListItems(arrayList)
     }
 
     override fun onResume() {
@@ -90,69 +108,30 @@ class MainActivity : AppCompatActivity() {
             networkCapabilities: NetworkCapabilities
         ) {
             super.onCapabilitiesChanged(network, networkCapabilities)
-            when {
-                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                    runOnUiThread {
+            viewModel.onCapabilitiesChanged(networkCapabilities)
+            runOnUiThread {
+                when {
+                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
                         binding.tvNetworkStatus.text =
                             (getString(R.string.network_capabilities) + getString(R.string.transport_wifi))
+
                     }
-                    // wifi http
-                    HW2WebApi.getInstance(applicationContext).wifiStatus(object :
-                        OnApiListener<APIResponse> {
-                        override fun onApiTaskSuccess(responseData: APIResponse) {
-                            Toast.makeText(
-                                applicationContext,
-                                getString(
-                                    R.string.response_display,
-                                    responseData.status,
-                                    responseData.message
-                                ),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        override fun onApiTaskFailure(toString: String) {
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.fail_message, toString),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                    })
-                }
-                networkCapabilities.hasTransport(
-                    NetworkCapabilities.TRANSPORT_CELLULAR
-                ) -> {
-                    runOnUiThread {
+                    networkCapabilities.hasTransport(
+                        NetworkCapabilities.TRANSPORT_CELLULAR
+                    ) -> {
                         binding.tvNetworkStatus.text =
                             (getString(R.string.network_capabilities) + getString(R.string.transport_cellular))
                     }
-                    // https api
-                    HW2WebApi.getInstance(applicationContext).status(object :
-                        OnApiListener<APIResponse> {
-                        override fun onApiTaskSuccess(responseData: APIResponse) {
-                            Toast.makeText(
-                                applicationContext,
-                                getString(
-                                    R.string.response_display,
-                                    responseData.status,
-                                    responseData.message
-                                ),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        override fun onApiTaskFailure(toString: String) {
-                            Toast.makeText(
-                                applicationContext,
-                                getString(R.string.fail_message, toString),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    })
                 }
             }
         }
+    }
+
+    private fun showToast(string: String) {
+        Toast.makeText(
+            applicationContext,
+            string,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

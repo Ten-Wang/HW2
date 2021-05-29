@@ -14,7 +14,7 @@ open class TimeUtils {
          * @param time   時間
          * @return String 格式為 [format] 格式
          */
-        fun toString(format: String, time: Long): String {
+        private fun toString(format: String, time: Long): String {
             val formatter = SimpleDateFormat(format, Locale.TAIWAN)
             return formatter.format(Date(time))
         }
