@@ -14,16 +14,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import tw.teng.hw2.R
 import tw.teng.hw2.databinding.ActivityMainBinding
-import tw.teng.hw2.resource.network.HW2WebApi
-import tw.teng.hw2.resource.network.OnApiListener
-import tw.teng.hw2.resource.network.model.APIResponse
 import tw.teng.hw2.resource.repository.model.*
 import tw.teng.hw2.resource.utils.TimeUtils
 
 
 class MainActivity : AppCompatActivity() {
 
-    val arrayList = arrayListOf(
+    val itemList = arrayListOf(
         TitleItem("DAY PASS"),
         DayPass(),
         Day3Pass(),
@@ -40,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.listLiveData.observe(this, {
             (binding.recyclerView.adapter as RecyclerViewAdapter).setItems(it)
+            (binding.recyclerView.adapter as RecyclerViewAdapter).notifyDataSetChanged()
         })
         viewModel.toastLiveData.observe(this, {
             showToast(it)
@@ -59,10 +57,10 @@ class MainActivity : AppCompatActivity() {
             arrayListOf(),
             object : RecyclerViewAdapter.ListItemAdapterListener {
                 override fun onItemClick(position: Int) {
-                    val strName = (arrayList[position] as HourPass).name
+                    val strName = (itemList[position] as HourPass).name
                     val strCurrentTime = TimeUtils.toString(System.currentTimeMillis())
                     val strExpiredTime = TimeUtils.toString(
-                        System.currentTimeMillis() + (arrayList[position] as HourPass).duration
+                        System.currentTimeMillis() + (itemList[position] as HourPass).duration
                     )
                     binding.tvActiveText.text =
                         getString(R.string.tv_active_text, strName, strCurrentTime, strExpiredTime)
@@ -70,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             })
         recyclerView.adapter = adapter
 
-        viewModel.setListItems(arrayList)
+        viewModel.setListItems(itemList)
     }
 
     override fun onResume() {

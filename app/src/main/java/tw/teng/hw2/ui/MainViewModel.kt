@@ -8,13 +8,13 @@ import tw.teng.hw2.resource.repository.AppRepository
 import tw.teng.hw2.resource.repository.model.ListItem
 
 open class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private var appRepo: AppRepository = AppRepository.getInstance(application)
+    var appRepo: AppRepository = AppRepository.getInstance(application)
 
     var listLiveData: MutableLiveData<MutableList<ListItem>> = appRepo.listItems
-    var toastLiveData: MutableLiveData<String> = appRepo.toastString
+    var toastLiveData: MutableLiveData<String> = appRepo.strToast
 
-    fun setListItems(arrayList: MutableList<ListItem>) {
-        appRepo.setListItems(arrayList)
+    fun setListItems(list: MutableList<ListItem>) {
+        appRepo.setListItems(list)
     }
 
     fun onCapabilitiesChanged(networkCapabilities: NetworkCapabilities) {

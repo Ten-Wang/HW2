@@ -23,10 +23,10 @@ class AppRepository private constructor(private val _application: Application) {
         }
     }
 
-    var toastString = MutableLiveData<String>()
+    var strToast = MutableLiveData<String>()
     var listItems = MutableLiveData<MutableList<ListItem>>()
-    fun setListItems(arrayList: MutableList<ListItem>) {
-        listItems.postValue(arrayList)
+    fun setListItems(list: MutableList<ListItem>) {
+        listItems.postValue(list)
     }
 
     fun onCapabilitiesChanged(networkCapabilities: NetworkCapabilities) {
@@ -41,12 +41,12 @@ class AppRepository private constructor(private val _application: Application) {
                             responseData.status,
                             responseData.message
                         )
-                        toastString.postValue(string)
+                        strToast.postValue(string)
                     }
 
                     override fun onApiTaskFailure(toString: String) {
                         val string = _application.getString(R.string.fail_message, toString)
-                        toastString.postValue(string)
+                        strToast.postValue(string)
                     }
                 })
             }
@@ -62,12 +62,12 @@ class AppRepository private constructor(private val _application: Application) {
                             responseData.status,
                             responseData.message
                         )
-                        toastString.postValue(string)
+                        strToast.postValue(string)
                     }
 
                     override fun onApiTaskFailure(toString: String) {
                         val string = _application.getString(R.string.fail_message, toString)
-                        toastString.postValue(string)
+                        strToast.postValue(string)
                     }
                 })
             }

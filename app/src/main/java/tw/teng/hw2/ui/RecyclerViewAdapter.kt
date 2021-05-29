@@ -10,7 +10,7 @@ import tw.teng.hw2.R
 import tw.teng.hw2.resource.repository.model.HourPass
 import tw.teng.hw2.resource.repository.model.ListItem
 import tw.teng.hw2.resource.repository.model.TitleItem
-import java.text.DecimalFormat
+import tw.teng.hw2.resource.utils.FormatUtils
 
 class RecyclerViewAdapter internal constructor(
     private var itemList: MutableList<ListItem>, private val mListener: ListItemAdapterListener
@@ -70,7 +70,6 @@ class RecyclerViewAdapter internal constructor(
 
     fun setItems(listItems: MutableList<ListItem>) {
         itemList = listItems
-        notifyDataSetChanged()
     }
 
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -83,8 +82,7 @@ class RecyclerViewAdapter internal constructor(
         fun bindData(list: List<ListItem>, position: Int) {
             val item = list[position] as HourPass
             tvPass.text = item.name
-            val mDecimalFormat = DecimalFormat("###,###,###,###")
-            val rpDisplay = mDecimalFormat.format(item.rp).replace(",", ".")
+            val rpDisplay = FormatUtils.getRpDecimalFormat(item.rp)
             tvRp.text = ("Rp $rpDisplay")
             btn.setOnClickListener {
                 btn.isEnabled = false

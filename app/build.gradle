@@ -41,6 +41,10 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -74,4 +78,8 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Mockk
+    testImplementation "io.mockk:mockk:1.10.2"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 }
