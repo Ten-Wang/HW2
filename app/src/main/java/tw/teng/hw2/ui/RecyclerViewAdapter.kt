@@ -82,6 +82,8 @@ class RecyclerViewAdapter internal constructor(
             val rpDisplay = mDecimalFormat.format(item.rp).replace(",", ".")
             tvRp.text = ("Rp $rpDisplay")
             btn.setOnClickListener {
+                btn.isEnabled = false
+                btn.text = itemView.context.getString(R.string.activate)
                 mListener.onItemClick(position)
             }
         }
