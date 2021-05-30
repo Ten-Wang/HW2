@@ -1,5 +1,6 @@
 package tw.teng.hw2.ui
 
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
@@ -19,7 +20,7 @@ import tw.teng.hw2.resource.utils.DataUtils
 
 class MainActivity : AppCompatActivity() {
 
-    val itemList = DataUtils.getItemList()
+    private val itemList = DataUtils.getItemList()
     private val viewModel by viewModel<MainViewModel>()
 
     private lateinit var binding: ActivityMainBinding
@@ -118,5 +119,10 @@ class MainActivity : AppCompatActivity() {
             string,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        (binding.recyclerView.adapter as RecyclerViewAdapter).notifyDataSetChanged()
     }
 }
