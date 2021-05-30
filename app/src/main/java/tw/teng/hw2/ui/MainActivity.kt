@@ -14,21 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import tw.teng.hw2.R
 import tw.teng.hw2.databinding.ActivityMainBinding
-import tw.teng.hw2.resource.repository.model.HourPass
 import tw.teng.hw2.resource.utils.DataUtils
-import tw.teng.hw2.resource.utils.TimeUtils
 
 
 class MainActivity : AppCompatActivity() {
 
     val itemList = DataUtils.getItemList()
-
-
     private val viewModel by viewModel<MainViewModel>()
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         viewModel.listLiveData.observe(this, {
             (binding.recyclerView.adapter as RecyclerViewAdapter).setItems(it)
             (binding.recyclerView.adapter as RecyclerViewAdapter).notifyDataSetChanged()
@@ -36,11 +34,13 @@ class MainActivity : AppCompatActivity() {
         viewModel.toastLiveData.observe(this, {
             showToast(it)
         })
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        viewModel.activeTextListData.observe(this, {
+            binding.tvActiveText.text = it
+        })
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        // init View
         val recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.addItemDecoration(
             DividerItemDecoration(
                 applicationContext,
@@ -51,17 +51,10 @@ class MainActivity : AppCompatActivity() {
             arrayListOf(),
             object : RecyclerViewAdapter.ListItemAdapterListener {
                 override fun onItemClick(position: Int) {
-                    val strName = (itemList[position] as HourPass).name
-                    val strCurrentTime = TimeUtils.toString(System.currentTimeMillis())
-                    val strExpiredTime = TimeUtils.toString(
-                        System.currentTimeMillis() + (itemList[position] as HourPass).duration
-                    )
-                    binding.tvActiveText.text =
-                        getString(R.string.tv_active_text, strName, strCurrentTime, strExpiredTime)
+                    viewModel.onItemClick(position)
                 }
             })
         recyclerView.adapter = adapter
-
         viewModel.setListItems(itemList)
     }
 

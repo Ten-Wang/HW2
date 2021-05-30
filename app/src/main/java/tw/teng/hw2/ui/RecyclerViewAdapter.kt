@@ -84,9 +84,13 @@ class RecyclerViewAdapter internal constructor(
             tvPass.text = item.name
             val rpDisplay = FormatUtils.getRpDecimalFormat(item.rp)
             tvRp.text = ("Rp $rpDisplay")
-            btn.setOnClickListener {
-                btn.isEnabled = false
+            btn.isEnabled = item.enable
+            if (!btn.isEnabled) {
                 btn.text = itemView.context.getString(R.string.activate)
+            }
+            btn.setOnClickListener {
+                (list[position] as HourPass).enable = false
+                notifyItemChanged(position)
                 mListener.onItemClick(position)
             }
         }

@@ -12,6 +12,7 @@ open class MainViewModel(private val appRepo: AppRepository) :
 
     var listLiveData: MutableLiveData<MutableList<ListItem>> = appRepo.listItems
     var toastLiveData: MutableLiveData<String> = appRepo.strToast
+    val activeTextListData: MutableLiveData<String> = appRepo.strActive
 
     fun setListItems(list: MutableList<ListItem>) {
         appRepo.setListItems(list)
@@ -19,5 +20,9 @@ open class MainViewModel(private val appRepo: AppRepository) :
 
     fun onCapabilitiesChanged(networkCapabilities: NetworkCapabilities) {
         appRepo.onCapabilitiesChanged(networkCapabilities)
+    }
+
+    fun onItemClick(position: Int) {
+       appRepo.onItemClick(position)
     }
 }
