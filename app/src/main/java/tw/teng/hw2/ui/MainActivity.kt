@@ -15,20 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import tw.teng.hw2.R
 import tw.teng.hw2.databinding.ActivityMainBinding
 import tw.teng.hw2.resource.repository.model.*
+import tw.teng.hw2.resource.utils.DataUtils
 import tw.teng.hw2.resource.utils.TimeUtils
 
 
 class MainActivity : AppCompatActivity() {
 
-    val itemList = arrayListOf(
-        TitleItem("DAY PASS"),
-        DayPass(),
-        Day3Pass(),
-        Day7Pass(),
-        TitleItem("HOUR PASS"),
-        HourPass(),
-        Hour8Pass()
-    )
+    val itemList = DataUtils.getItemList()
+
     private lateinit var viewModel: MainViewModel
 
     private lateinit var binding: ActivityMainBinding
