@@ -7,6 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import tw.teng.hw2.resource.repository.AppRepository
 import tw.teng.hw2.resource.repository.model.*
 import tw.teng.hw2.resource.utils.DataUtils
 
@@ -20,7 +21,7 @@ class MainViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = MainViewModel(mockk())
+        viewModel = MainViewModel(AppRepository.getInstance(mockk(),mockk()))
         viewModel.setListItems(arrayListOf())
     }
 

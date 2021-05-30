@@ -9,12 +9,12 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import tw.teng.hw2.R
 import tw.teng.hw2.databinding.ActivityMainBinding
-import tw.teng.hw2.resource.repository.model.*
+import tw.teng.hw2.resource.repository.model.HourPass
 import tw.teng.hw2.resource.utils.DataUtils
 import tw.teng.hw2.resource.utils.TimeUtils
 
@@ -23,12 +23,12 @@ class MainActivity : AppCompatActivity() {
 
     val itemList = DataUtils.getItemList()
 
-    private lateinit var viewModel: MainViewModel
+
+    private val viewModel by viewModel<MainViewModel>()
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.listLiveData.observe(this, {
             (binding.recyclerView.adapter as RecyclerViewAdapter).setItems(it)
             (binding.recyclerView.adapter as RecyclerViewAdapter).notifyDataSetChanged()

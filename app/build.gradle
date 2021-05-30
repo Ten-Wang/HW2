@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'koin'
 }
 
 android {
@@ -82,4 +83,14 @@ dependencies {
     // Mockk
     testImplementation "io.mockk:mockk:1.10.2"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    // Koin for Kotlin
+    implementation "io.insert-koin:koin-core:3.0.2"
+    // Koin extended & experimental features
+    implementation "io.insert-koin:koin-core-ext:3.0.2"
+    // Koin for Unit tests
+    testImplementation "io.insert-koin:koin-test:3.0.2"
+
+    // Koin for Android
+    implementation "io.insert-koin:koin-android:3.0.2"
 }

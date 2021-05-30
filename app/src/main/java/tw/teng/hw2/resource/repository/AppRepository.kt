@@ -9,15 +9,15 @@ import tw.teng.hw2.resource.network.OnApiListener
 import tw.teng.hw2.resource.network.model.APIResponse
 import tw.teng.hw2.resource.repository.model.ListItem
 
-class AppRepository private constructor(private val _application: Application) {
+class AppRepository private constructor(private val _application: Application, private val webApi: HW2WebApi) {
 
     companion object {
         private var instance: AppRepository? = null
 
         @Synchronized
-        fun getInstance(application: Application): AppRepository {
+        fun getInstance(application: Application,webApi: HW2WebApi): AppRepository {
             if (instance == null) {
-                instance = AppRepository(application)
+                instance = AppRepository(application,webApi)
             }
             return instance!!
         }
@@ -25,6 +25,7 @@ class AppRepository private constructor(private val _application: Application) {
 
     var strToast = MutableLiveData<String>()
     var listItems = MutableLiveData<MutableList<ListItem>>()
+
     fun setListItems(list: MutableList<ListItem>) {
         listItems.postValue(list)
     }
@@ -33,7 +34,7 @@ class AppRepository private constructor(private val _application: Application) {
         when {
             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
                 // wifi http
-                HW2WebApi.getInstance(_application).wifiStatus(object :
+                webApi.wifiStatus(object :
                     OnApiListener<APIResponse> {
                     override fun onApiTaskSuccess(responseData: APIResponse) {
                         val string = _application.getString(
@@ -41,12 +42,12 @@ class AppRepository private constructor(private val _application: Application) {
                             responseData.status,
                             responseData.message
                         )
-                        strToast.postValue(string)
+                        showToast(string)
                     }
 
                     override fun onApiTaskFailure(toString: String) {
                         val string = _application.getString(R.string.fail_message, toString)
-                        strToast.postValue(string)
+                        showToast(string)
                     }
                 })
             }
@@ -54,7 +55,7 @@ class AppRepository private constructor(private val _application: Application) {
                 NetworkCapabilities.TRANSPORT_CELLULAR
             ) -> {
                 // https api
-                HW2WebApi.getInstance(_application).status(object :
+                webApi.status(object :
                     OnApiListener<APIResponse> {
                     override fun onApiTaskSuccess(responseData: APIResponse) {
                         val string = _application.getString(
@@ -62,7 +63,7 @@ class AppRepository private constructor(private val _application: Application) {
                             responseData.status,
                             responseData.message
                         )
-                        strToast.postValue(string)
+                        showToast(string)
                     }
 
                     override fun onApiTaskFailure(toString: String) {
@@ -72,5 +73,9 @@ class AppRepository private constructor(private val _application: Application) {
                 })
             }
         }
+    }
+
+    private fun showToast(string: String) {
+        strToast.postValue(string)
     }
 }
