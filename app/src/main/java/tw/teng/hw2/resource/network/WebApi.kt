@@ -1,16 +1,13 @@
 package tw.teng.hw2.resource.network
 
-import android.content.Context
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import tw.teng.hw2.R
 import java.util.concurrent.TimeUnit
 
-abstract class WebApi(context: Context) {
-    private val _apiUrlPrefix: String = context.getString(R.string.https_api_url_prefix)
-    private val _apiWifiUrlPrefix: String = context.getString(R.string.wifi_api_url_prefix)
+abstract class WebApi(apiUrlPrefix: String, apiWifiUrlPrefix: String) {
+
 
     companion object {
         private const val READ_TIMEOUT = 30 // seconds
@@ -37,10 +34,10 @@ abstract class WebApi(context: Context) {
     }
 
     val apiRetrofit: Retrofit by lazy {
-        return@lazy initRetrofit(_apiUrlPrefix, GsonConverterFactory.create())
+        return@lazy initRetrofit(apiUrlPrefix, GsonConverterFactory.create())
     }
 
     val apiWifiRetrofit: Retrofit by lazy {
-        return@lazy initRetrofit(_apiWifiUrlPrefix, GsonConverterFactory.create())
+        return@lazy initRetrofit(apiWifiUrlPrefix, GsonConverterFactory.create())
     }
 }

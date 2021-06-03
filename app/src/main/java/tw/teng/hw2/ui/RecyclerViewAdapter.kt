@@ -1,12 +1,13 @@
 package tw.teng.hw2.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import tw.teng.hw2.R
+import tw.teng.hw2.databinding.PassItemBinding
+import tw.teng.hw2.databinding.TitleItemBinding
 import tw.teng.hw2.resource.repository.model.HourPass
 import tw.teng.hw2.resource.repository.model.ListItem
 import tw.teng.hw2.resource.repository.model.TitleItem
@@ -15,29 +16,30 @@ import tw.teng.hw2.resource.utils.FormatUtils
 class RecyclerViewAdapter internal constructor(
     private var itemList: MutableList<ListItem>, private val mListener: ListItemAdapterListener
 ) :
-    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
     companion object {
         const val TYPE_PASS = 0
         const val TYPE_TITLE = 1
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             TYPE_PASS -> {
-                PassViewHolder(
-                    inflater.inflate(R.layout.pass_item, parent, false)
-                )
+                val passBinding = PassItemBinding.inflate(inflater, parent, false)
+                PassViewHolder(passBinding)
             }
             TYPE_TITLE -> {
+                val titleBinding = TitleItemBinding.inflate(inflater, parent, false)
                 TitleViewHolder(
-                    inflater.inflate(R.layout.title_item, parent, false)
+                    titleBinding
                 )
             }
             else -> {
+                val passBinding = PassItemBinding.inflate(inflater, parent, false)
                 PassViewHolder(
-                    inflater.inflate(R.layout.pass_item, parent, false)
+                    passBinding
                 )
             }
         }
@@ -57,7 +59,7 @@ class RecyclerViewAdapter internal constructor(
         }
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: MyViewHolder, position: Int) {
         when (getItemViewType(position)) {
             TYPE_PASS -> (viewHolder as PassViewHolder).bindData(itemList, position)
             TYPE_TITLE -> (viewHolder as TitleViewHolder).bindData(itemList, position)
@@ -72,12 +74,24 @@ class RecyclerViewAdapter internal constructor(
         itemList = listItems
     }
 
-    open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    open inner class MyViewHolder : RecyclerView.ViewHolder {
+        private var passItemBinding: PassItemBinding? = null
+        var titleItemBinding: TitleItemBinding? = null
 
-    open inner class PassViewHolder(itemView: View) : ViewHolder(itemView) {
-        private val tvPass: TextView = itemView.findViewById(R.id.tv_pass)
-        private val tvRp: TextView = itemView.findViewById(R.id.tv_rp)
-        private val btn: Button = itemView.findViewById(R.id.btn)
+        constructor(binding: PassItemBinding) : super(binding.root) {
+            passItemBinding = binding
+        }
+
+        constructor(binding: TitleItemBinding) : super(binding.root) {
+            titleItemBinding = binding
+        }
+    }
+
+    open inner class PassViewHolder(itemView: PassItemBinding) : MyViewHolder(itemView) {
+
+        private val tvPass: TextView = itemView.tvPass
+        private val tvRp: TextView = itemView.tvRp
+        private val btn: Button = itemView.btn
 
         fun bindData(list: List<ListItem>, position: Int) {
             val item = list[position] as HourPass
@@ -96,8 +110,8 @@ class RecyclerViewAdapter internal constructor(
         }
     }
 
-    inner class TitleViewHolder(itemView: View) : ViewHolder(itemView) {
-        private val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
+    inner class TitleViewHolder(itemView: TitleItemBinding) : MyViewHolder(itemView) {
+        private val tvTitle: TextView = itemView.tvTitle
 
         fun bindData(list: List<ListItem>, position: Int) {
             val item = list[position]

@@ -1,18 +1,18 @@
 package tw.teng.hw2.resource.network
 
-import android.content.Context
 import tw.teng.hw2.resource.network.api_interface.ContactInterface
 import tw.teng.hw2.resource.network.model.APIResponse
 
-class HW2WebApi constructor(context: Context) : WebApi(context) {
+class HW2WebApi constructor(apiUrlPrefix: String, apiWifiUrlPrefix: String) :
+    WebApi(apiUrlPrefix, apiWifiUrlPrefix) {
 
     companion object {
         private var instance: HW2WebApi? = null
 
         @Synchronized
-        fun getInstance(context: Context): HW2WebApi {
+        fun getInstance(apiUrlPrefix: String, apiWifiUrlPrefix: String): HW2WebApi {
             if (instance == null) {
-                instance = HW2WebApi(context)
+                instance = HW2WebApi(apiUrlPrefix, apiWifiUrlPrefix)
             }
             return instance!!
         }
